@@ -1,6 +1,5 @@
 package com.oganbelema.triviaapp.component
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,16 +38,26 @@ fun Questions(
 ) {
     val questions = viewModel.dataOrException.value.data
 
+    val questionIndex = remember {
+        mutableStateOf(0)
+    }
+
     if (viewModel.dataOrException.value.isLoading == true) {
 
-        CircularProgressIndicator(modifier)
+        CircularProgressIndicator(modifier = modifier)
 
-        Log.d("Loading", "Loading.....")
     } else {
-        Log.d("Loading", "Loading Stopped.....")
+        val question = try {
+            questions?.get(index = questionIndex.value)
+        } catch(exception: Exception) {
+            null
+        }
 
-        questions?.get(0)?.let { question ->
-            QuestionDisplay(question = question)
+        if (question != null) {
+            QuestionDisplay(question = question, questionIndex = questionIndex,
+                viewModel = viewModel) {
+                questionIndex.value += 1
+            }
         }
     }
 }
@@ -57,8 +66,8 @@ fun Questions(
 @Composable
 fun QuestionDisplay(
     question: Question,
-    //questionIndex: MutableState<Int>,
-    //viewModel: QuestionViewModel,
+    questionIndex: MutableState<Int>,
+    viewModel: QuestionViewModel,
     onNextClicked: (Int) -> Unit = {}
 ) {
     val choicesState = remember(question) {
@@ -90,7 +99,11 @@ fun QuestionDisplay(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            QuestionTracker()
+            QuestionTracker(
+                counter = questionIndex.value,
+                outOf = viewModel.dataOrException.value.data?.size ?: 0
+            )
+
             DrawDottedLine(
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
             )
@@ -136,7 +149,7 @@ fun QuestionDisplay(
                         backgroundColor = AppColors.lightBlue
                     ),
                     onClick = {
-
+                        onNextClicked.invoke(questionIndex.value)
                     }) {
                     Text(
                         text = stringResource(id = R.string.next),
