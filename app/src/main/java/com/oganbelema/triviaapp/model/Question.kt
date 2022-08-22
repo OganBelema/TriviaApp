@@ -1,6 +1,6 @@
 package com.oganbelema.triviaapp.model
 
-data class Trivia(
+data class Question(
     val answer: String,
     val category: String,
     val choices: List<String>,
