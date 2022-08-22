@@ -1,6 +1,6 @@
 package com.oganbelema.triviaapp.di
 
-import com.oganbelema.triviaapp.repository.QuestionApi
+import com.oganbelema.triviaapp.network.QuestionApi
 import com.oganbelema.triviaapp.util.BASE_URL
 import dagger.Module
 import dagger.Provides

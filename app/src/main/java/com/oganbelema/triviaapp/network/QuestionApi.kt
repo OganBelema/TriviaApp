@@ -1,4 +1,4 @@
-package com.oganbelema.triviaapp.repository
+package com.oganbelema.triviaapp.network
 
 import com.oganbelema.triviaapp.model.Trivia
 import retrofit2.http.GET
