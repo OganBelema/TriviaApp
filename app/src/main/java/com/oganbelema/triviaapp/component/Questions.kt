@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +23,10 @@ import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oganbelema.triviaapp.R
@@ -49,13 +52,15 @@ fun Questions(
     } else {
         val question = try {
             questions?.get(index = questionIndex.value)
-        } catch(exception: Exception) {
+        } catch (exception: Exception) {
             null
         }
 
         if (question != null) {
-            QuestionDisplay(question = question, questionIndex = questionIndex,
-                viewModel = viewModel) {
+            QuestionDisplay(
+                question = question, questionIndex = questionIndex,
+                viewModel = viewModel
+            ) {
                 questionIndex.value += 1
             }
         }
@@ -99,6 +104,9 @@ fun QuestionDisplay(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
+
+            if (questionIndex.value >= 3) ShowProgress(score = questionIndex.value)
+
             QuestionTracker(
                 counter = questionIndex.value,
                 outOf = viewModel.dataOrException.value.data?.size ?: 0
@@ -145,7 +153,7 @@ fun QuestionDisplay(
                         .padding(4.dp)
                         .align(alignment = Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(34.dp),
-                    colors = ButtonDefaults.buttonColors(
+                    colors = buttonColors(
                         backgroundColor = AppColors.lightBlue
                     ),
                     onClick = {
@@ -275,4 +283,62 @@ fun DrawDottedLine(pathEffect: PathEffect) {
                 pathEffect = pathEffect
             )
         })
+}
+
+@Preview
+@Composable
+fun ShowProgress(score: Int = 12) {
+
+    val progressFactor = remember(score) {
+        mutableStateOf(score * 0.005f)
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .height(45.dp)
+            .border(
+                width = 4.dp, brush = Brush.linearGradient(
+                    colors = listOf(
+                        AppColors.lightPurple, AppColors.lightPurple
+                    )
+                ),
+                shape = RoundedCornerShape(34.dp)
+            )
+            .clip(RoundedCornerShape(50))
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(progressFactor.value)
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            Color(0xFFF95075),
+                            Color(0xFFBE6BE5)
+                        )
+                    )
+                ),
+            contentPadding = PaddingValues(1.dp),
+            enabled = false,
+            elevation = null,
+            colors = buttonColors(
+                backgroundColor = Color.Transparent,
+                disabledBackgroundColor = Color.Transparent
+            ),
+            onClick = {}) {
+            Text(
+                text = (score * 10).toString(),
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(24.dp))
+                    .fillMaxHeight(0.86f)
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                color = AppColors.offWhite,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
