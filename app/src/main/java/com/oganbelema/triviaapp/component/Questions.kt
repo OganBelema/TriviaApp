@@ -139,7 +139,23 @@ fun QuestionDisplay(
                             )
                         )
 
-                        Text(text = answerText)
+                        Text(text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Light,
+                                    color = if (correctAnswerState.value == true &&
+                                        index == answerState.value) {
+                                        Color.Green
+                                    } else if (correctAnswerState.value == false &&
+                                        index == answerState.value) {
+                                        Color.Red
+                                    } else {
+                                        AppColors.offWhite
+                                    }, fontSize = 18.sp
+                                )) {
+                                append(answerText)
+                            }
+                        })
                     }
                 }
             }
