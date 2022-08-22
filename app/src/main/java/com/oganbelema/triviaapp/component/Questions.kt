@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -107,60 +108,101 @@ fun QuestionDisplay(
 
                 //choices
                 choicesState.forEachIndexed { index, answerText ->
-                    Row(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .fillMaxWidth()
-                            .height(45.dp)
-                            .border(
-                                width = 4.dp,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        AppColors.offDarkPurple,
-                                        AppColors.offDarkPurple
-                                    )
-                                ), shape = RoundedCornerShape(15.dp)
-                            )
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.Transparent),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        RadioButton(
-                            selected = (answerState.value == index), onClick = {
-                                updateAnswer(index)
-                            }, modifier = Modifier.padding(start = 16.dp),
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor =
-                                if (correctAnswerState.value == true && index == answerState.value)
-                                    Color.Green.copy(alpha = 0.2f)
-                                else
-                                    Color.Red.copy(alpha = 0.2f)
-                            )
+                    QuestionChoiceRow {
+                        QuestionChoiceRadioButton(
+                            answerState,
+                            index,
+                            updateAnswer,
+                            correctAnswerState
                         )
 
-                        Text(text = buildAnnotatedString {
-                            withStyle(
-                                style = SpanStyle(
-                                    fontWeight = FontWeight.Light,
-                                    color = if (correctAnswerState.value == true &&
-                                        index == answerState.value) {
-                                        Color.Green
-                                    } else if (correctAnswerState.value == false &&
-                                        index == answerState.value) {
-                                        Color.Red
-                                    } else {
-                                        AppColors.offWhite
-                                    }, fontSize = 18.sp
-                                )) {
-                                append(answerText)
-                            }
-                        })
+                        QuestionChoiceText(
+                            correctAnswerState,
+                            index,
+                            answerState,
+                            answerText
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun QuestionChoiceRow(
+    content: @Composable () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .height(45.dp)
+            .border(
+                width = 4.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        AppColors.offDarkPurple,
+                        AppColors.offDarkPurple
+                    )
+                ), shape = RoundedCornerShape(15.dp)
+            )
+            .clip(RoundedCornerShape(50))
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun QuestionChoiceRadioButton(
+    answerState: MutableState<Int?>,
+    index: Int,
+    updateAnswer: (Int) -> Unit,
+    correctAnswerState: MutableState<Boolean?>
+) {
+    RadioButton(
+        selected = (answerState.value == index), onClick = {
+            updateAnswer(index)
+        }, modifier = Modifier.padding(start = 16.dp),
+        colors = RadioButtonDefaults.colors(
+            selectedColor =
+            if (correctAnswerState.value == true && index == answerState.value)
+                Color.Green.copy(alpha = 0.2f)
+            else
+                Color.Red.copy(alpha = 0.2f)
+        )
+    )
+}
+
+@Composable
+private fun QuestionChoiceText(
+    correctAnswerState: MutableState<Boolean?>,
+    index: Int,
+    answerState: MutableState<Int?>,
+    answerText: String
+) {
+    Text(text = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                fontWeight = FontWeight.Light,
+                color = if (correctAnswerState.value == true &&
+                    index == answerState.value
+                ) {
+                    Color.Green
+                } else if (correctAnswerState.value == false &&
+                    index == answerState.value
+                ) {
+                    Color.Red
+                } else {
+                    AppColors.offWhite
+                }, fontSize = 18.sp
+            )
+        ) {
+            append(answerText)
+        }
+    })
 }
 
 
