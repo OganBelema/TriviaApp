@@ -4,7 +4,9 @@ import com.oganbelema.triviaapp.data.DataOrException
 import com.oganbelema.triviaapp.model.Trivia
 import com.oganbelema.triviaapp.network.QuestionApi
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class QuestionRepository @Inject constructor(private val questionApi: QuestionApi) {
 
     private val dataOrException = DataOrException<List<Trivia>, Boolean, Exception>()
