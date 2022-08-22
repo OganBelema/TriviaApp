@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oganbelema.triviaapp.model.Question
@@ -32,8 +30,10 @@ import com.oganbelema.triviaapp.util.AppColors
 import com.oganbelema.triviaapp.viewmodel.QuestionViewModel
 
 @Composable
-fun Questions(modifier: Modifier = Modifier,
-    viewModel: QuestionViewModel){
+fun Questions(
+    modifier: Modifier = Modifier,
+    viewModel: QuestionViewModel
+) {
     val questions = viewModel.dataOrException.value.data
 
     if (viewModel.dataOrException.value.isLoading == true) {
@@ -77,19 +77,24 @@ fun QuestionDisplay(
         }
     }
 
-    Surface(modifier = Modifier
-        .fillMaxSize()
-        .padding(4.dp),
-    color = AppColors.darkPurple) {
-        Column(modifier = Modifier.padding(12.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize(),
+        color = AppColors.darkPurple
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
             QuestionTracker()
             DrawDottedLine(
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f))
-            
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+            )
+
             Column {
-                Text(text = question.question,
+                Text(
+                    text = question.question,
                     modifier = Modifier
                         .padding(5.dp)
                         .align(alignment = Alignment.Start)
@@ -97,38 +102,43 @@ fun QuestionDisplay(
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 22.sp,
-                    color = AppColors.offWhite)
+                    color = AppColors.offWhite
+                )
 
                 //choices
                 choicesState.forEachIndexed { index, answerText ->
-                    Row(modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth()
-                        .height(45.dp)
-                        .border(
-                            width = 4.dp,
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    AppColors.offDarkPurple,
-                                    AppColors.offDarkPurple
-                                )
-                            ), shape = RoundedCornerShape(15.dp)
-                        )
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Transparent),
-                    verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .fillMaxWidth()
+                            .height(45.dp)
+                            .border(
+                                width = 4.dp,
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        AppColors.offDarkPurple,
+                                        AppColors.offDarkPurple
+                                    )
+                                ), shape = RoundedCornerShape(15.dp)
+                            )
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.Transparent),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
-                        RadioButton(selected = (answerState.value == index), onClick = {
-                            updateAnswer(index)
-                        }, modifier = Modifier.padding(start = 16.dp),
-                        colors = RadioButtonDefaults.colors(
-                            selectedColor =
-                            if (correctAnswerState.value == true && index == answerState.value)
-                                Color.Green.copy(alpha = 0.2f)
-                            else
-                                Color.Red.copy(alpha = 0.2f)
-                        ))
-                        
+                        RadioButton(
+                            selected = (answerState.value == index), onClick = {
+                                updateAnswer(index)
+                            }, modifier = Modifier.padding(start = 16.dp),
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor =
+                                if (correctAnswerState.value == true && index == answerState.value)
+                                    Color.Green.copy(alpha = 0.2f)
+                                else
+                                    Color.Red.copy(alpha = 0.2f)
+                            )
+                        )
+
                         Text(text = answerText)
                     }
                 }
@@ -141,13 +151,18 @@ fun QuestionDisplay(
 @Composable
 fun QuestionTracker(counter: Int = 10, outOf: Int = 100) {
     Text(text = buildAnnotatedString {
-        withStyle(style = ParagraphStyle(textIndent = TextIndent.None)){
-            withStyle(style = SpanStyle(color = AppColors.lightGray,
-                fontWeight = FontWeight.Bold, fontSize = 28.sp)){
-                append("Question $counter/")
-                withStyle(style = SpanStyle(
-                    color = AppColors.lightGray, fontWeight = FontWeight.Light, fontSize = 14.sp
+        withStyle(style = ParagraphStyle(textIndent = TextIndent.None)) {
+            withStyle(
+                style = SpanStyle(
+                    color = AppColors.lightGray,
+                    fontWeight = FontWeight.Bold, fontSize = 28.sp
                 )
+            ) {
+                append("Question $counter/")
+                withStyle(
+                    style = SpanStyle(
+                        color = AppColors.lightGray, fontWeight = FontWeight.Light, fontSize = 14.sp
+                    )
                 ) {
                     append("$outOf")
                 }
@@ -162,8 +177,10 @@ fun DrawDottedLine(pathEffect: PathEffect) {
         .fillMaxWidth()
         .height(1.dp),
         onDraw = {
-            drawLine(color = AppColors.lightGray, start = Offset(0f, 0f),
-            end = Offset(size.width, 0f),
-            pathEffect = pathEffect)
+            drawLine(
+                color = AppColors.lightGray, start = Offset(0f, 0f),
+                end = Offset(size.width, 0f),
+                pathEffect = pathEffect
+            )
         })
 }
