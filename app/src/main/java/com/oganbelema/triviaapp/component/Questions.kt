@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.oganbelema.triviaapp.R
 import com.oganbelema.triviaapp.model.Question
 import com.oganbelema.triviaapp.util.AppColors
 import com.oganbelema.triviaapp.viewmodel.QuestionViewModel
@@ -123,6 +125,25 @@ fun QuestionDisplay(
                             answerText
                         )
                     }
+                }
+
+                Button(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .align(alignment = Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(34.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = AppColors.lightBlue
+                    ),
+                    onClick = {
+
+                    }) {
+                    Text(
+                        text = stringResource(id = R.string.next),
+                        modifier = Modifier.padding(4.dp),
+                        color = AppColors.offWhite,
+                        fontSize = 18.sp
+                    )
                 }
             }
         }
