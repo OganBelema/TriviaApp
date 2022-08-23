@@ -47,7 +47,14 @@ fun Questions(
 
     if (viewModel.dataOrException.value.isLoading == true) {
 
-        CircularProgressIndicator(modifier = modifier)
+        Column(
+            modifier = modifier.fillMaxSize()
+                .background(color = AppColors.darkPurple),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator(modifier = modifier)
+        }
 
     } else {
         val question = try {
